@@ -1,44 +1,462 @@
-ブランチの切り方
-GitHub flowを参考にしましょう。
-https://qiita.com/tatane616/items/aec00cdc1b659761cf88
+<!DOCTYPE html>
+<html>
+<head>
+<title>git.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 
-master
-リリースできる状態のソースコードを置きます。
-リリースしたらタグを付与します。
-基本的に触らないです。
-develop
-開発中のコードを置くブランチです。
-git pull oirign developでつねに最新の状態を保ちましょう。
-feature
-課題ごとのコードを管理するブランチです。
-feature/001のように課題IDと紐づいています。
-コミットメッセージの書き方
-厳密に従う必要はありませんが、以下が参考になります。
-prefix	内容
-Add:	（機能・ファイルなどを）追加する
-Fix:	（コードなどを）修正する
-Update:	（パッケージやドキュメントなどを）更新する
-Remove:	（ファイル名やコードを）除去する
-Rename:	（ファイル名を）変更する
-Move:	（AをBに）移動する
-Change:	（AをBに）変更する
-借用
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="git%E3%81%AE%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95">Gitの管理方法</h1>
+<hr>
+<h1 id="%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E3%81%AE%E5%88%87%E3%82%8A%E6%96%B9">ブランチの切り方</h1>
+<p>GitHub flowを参考にしましょう。
+https://qiita.com/tatane616/items/aec00cdc1b659761cf88</p>
+<h2 id="master">master</h2>
+<ul>
+<li>リリースできる状態のソースコードを置きます。</li>
+<li>リリースしたらタグを付与します。</li>
+<li>基本的に触らないです。</li>
+</ul>
+<h2 id="develop">develop</h2>
+<ul>
+<li>開発中のコードを置くブランチです。</li>
+<li><code>git pull oirign develop</code> でつねに最新の状態を保ちましょう。</li>
+</ul>
+<h2 id="feature">feature</h2>
+<ul>
+<li>課題ごとのコードを管理するブランチです。</li>
+<li>feature/001のように課題IDと紐づいています。</li>
+</ul>
+<h2 id="%E3%82%B3%E3%83%9F%E3%83%83%E3%83%88%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9">コミットメッセージの書き方</h2>
+<ul>
+<li>厳密に従う必要はありませんが、以下が参考になります。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>prefix</th>
+<th style="text-align:right">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Add:</td>
+<td style="text-align:right">（機能・ファイルなどを）追加する</td>
+</tr>
+<tr>
+<td>Fix:</td>
+<td style="text-align:right">（コードなどを）修正する</td>
+</tr>
+<tr>
+<td>Update:</td>
+<td style="text-align:right">（パッケージやドキュメントなどを）更新する</td>
+</tr>
+<tr>
+<td>Remove:</td>
+<td style="text-align:right">（ファイル名やコードを）除去する</td>
+</tr>
+<tr>
+<td>Rename:</td>
+<td style="text-align:right">（ファイル名を）変更する</td>
+</tr>
+<tr>
+<td>Move  :</td>
+<td style="text-align:right">（AをBに）移動する</td>
+</tr>
+<tr>
+<td>Change:</td>
+<td style="text-align:right">（AをBに）変更する</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>借用<br>
 https://www.tam-tam.co.jp/tipsnote/program/post16686.html
-https://qiita.com/itosho/items/9565c6ad2ffc24c09364
-プルリクの出し方
-自分の担当課題が完了したら、相手にプルリクを出しましょう。
+https://qiita.com/itosho/items/9565c6ad2ffc24c09364</li>
+</ul>
+<h2 id="%E3%83%97%E3%83%AB%E3%83%AA%E3%82%AF%E3%81%AE%E5%87%BA%E3%81%97%E6%96%B9">プルリクの出し方</h2>
+<p>自分の担当課題が完了したら、相手にプルリクを出しましょう。</p>
+<ol>
+<li>
+<p>featureブランチをpushします。
+git push origin feature/001</p>
+</li>
+<li>
+<p>backlogのメニューからGitを選択します。</p>
+</li>
+<li>
+<p>提出したGitリポジトリの「プルリクエスト」を押し、自分の提出したブランチを選択します。</p>
+</li>
+<li>
+<p>プルリクを出したい相手に「担当者」を設定し、コメントを書いて提出します。</p>
+</li>
+</ol>
+<h2 id="%E6%9C%9D%E8%B5%B7%E3%81%8D%E3%81%9F%E3%82%89%E3%82%84%E3%82%8B%E3%81%93%E3%81%A8">朝起きたらやること</h2>
+<ol>
+<li>git pull origin develop で最新のdevelopブランチを取り込む</li>
+<li>git checkout feature/*** で自分の作業ブランチに移動</li>
+<li>git merge develop でdevelopの状態を現在の作業ブランチに反映</li>
+<li>美味しいコーヒーを淹れる</li>
+</ol>
 
-featureブランチをpushします。
-git push origin feature/001
-
-backlogのメニューからGitを選択します。
-
-提出したGitリポジトリの「プルリクエスト」を押し、自分の提出したブランチを選択します。
-
-プルリクを出したい相手に「担当者」を設定し、コメントを書いて提出します。
-
-朝起きたらやること
-git pull origin develop で最新のdevelopブランチを取り込む
-git checkout feature/*** で自分の作業ブランチに移動
-git merge develop でdevelopの状態を現在の作業ブランチに反映
-美味しいコーヒーを淹れる
+</body>
+</html>

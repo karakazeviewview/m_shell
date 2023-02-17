@@ -1,223 +1,669 @@
-使用できる関数の一覧
-プロトタイプ・リンク・Tipsなど。
+<!DOCTYPE html>
+<html>
+<head>
+<title>avail_func.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 
-readline
-char *readline (prompt)
-https://nxmnpg.lemoda.net/ja/3/readline
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
-端末から一行を読み込み、その値を返す。
-入力処理で使用。
-rl_clear_history
-readlileの履歴をすべて削除する
-freeもしてくれる？
-rl_on_new_line
-int rl_on_new_line (void)
-https://tiswww.case.edu/php/chet/readline/readline.html#index-rl_005fon_005fnew_005fline
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
 
-新しく改行したことを関数に伝える。
-rl_replace_line
-void rl_replace_line (const char *text, int clear_undo);
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
 
-rl_line_bufferの文字列をtextで置き換える
-claer_undoが0でない場合、現在行に紐づくundoリストが削除される。
-rl_redisplay
-void rl_redisplay (void)
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%E4%BD%BF%E7%94%A8%E5%8F%AF%E8%83%BD%E9%96%A2%E6%95%B0">使用可能関数</h1>
+<hr>
+<h1 id="%E4%BD%BF%E7%94%A8%E3%81%A7%E3%81%8D%E3%82%8B%E9%96%A2%E6%95%B0%E3%81%AE%E4%B8%80%E8%A6%A7">使用できる関数の一覧</h1>
+<p>プロトタイプ・リンク・Tipsなど。</p>
+<h2 id="readline">readline</h2>
+<p>char *readline (prompt)
+https://nxmnpg.lemoda.net/ja/3/readline</p>
+<ul>
+<li>端末から一行を読み込み、その値を返す。</li>
+<li>入力処理で使用。<br>
+<br></li>
+</ul>
+<h2 id="rlclearhistory">rl_clear_history</h2>
+<ul>
+<li>readlileの履歴をすべて削除する</li>
+<li>freeもしてくれる？<br>
+<br></li>
+</ul>
+<h2 id="rlonnewline">rl_on_new_line</h2>
+<p>int rl_on_new_line (void)
+https://tiswww.case.edu/php/chet/readline/readline.html#index-rl_005fon_005fnew_005fline</p>
+<ul>
+<li>新しく改行したことを関数に伝える。<br>
+<br></li>
+</ul>
+<h2 id="rlreplaceline">rl_replace_line</h2>
+<p>void rl_replace_line (const char *text, int clear_undo);</p>
+<ul>
+<li>rl_line_bufferの文字列をtextで置き換える</li>
+<li>claer_undoが0でない場合、現在行に紐づくundoリストが削除される。<br>
+<br></li>
+</ul>
+<h2 id="rlredisplay">rl_redisplay</h2>
+<p>void rl_redisplay (void)
 https://tiswww.case.edu/php/chet/readline/readline.html#Redisplay
-
-rl_line_bufferの内容を再出力する。
-add_history
-文字列を履歴として追加する
-printf
-int printf(const char *format, ...)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/printf.3.html
-
-malloc
-void malloc(size_t size)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/malloc.3.html
-
-free
-void free(void *ptr)
-https://linuxjm.osdn.jp/html/procps/man1/free.1.html
-
-write
-ssize_t write(int fd, const void *buf, size_t count)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/write.2.html
-
-access
-open
+rl_line_bufferの内容を再出力する。<br>
+<br></p>
+<h2 id="addhistory">add_history</h2>
+<p>文字列を履歴として追加する<br>
+<br></p>
+<h2 id="printf">printf</h2>
+<p>int printf(const char *format, ...)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/printf.3.html<br>
+<br></p>
+<h2 id="malloc">malloc</h2>
+<p>void malloc(size_t size)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/malloc.3.html<br>
+<br></p>
+<h2 id="free">free</h2>
+<p>void free(void *ptr)
+https://linuxjm.osdn.jp/html/procps/man1/free.1.html<br>
+<br></p>
+<h2 id="write">write</h2>
+<p>ssize_t write(int fd, const void *buf, size_t count)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/write.2.html<br>
+<br></p>
+<h2 id="access">access</h2>
+<p>open
 int open(const char *pathname, int flags)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/open.2.html
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/open.2.html<br>
+<br></p>
+<h2 id="read">read</h2>
+<p>ssize_t read(int fd, void *buf, size_t count)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/read.2.html<br>
+<br></p>
+<h2 id="close">close</h2>
+<p>int close(int fd)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/close.2.html<br>
+<br></p>
+<h2 id="fork">fork</h2>
+<p>pid_t fork(void)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/fork.2.html</p>
+<ul>
+<li>子プロセスを作成する<br>
+<br></li>
+</ul>
+<h2 id="wait">wait</h2>
+<p>pid_t wait(int *wstatus)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/wait.2.html</p>
+<ul>
+<li>子プロセスの終了を待機する。<br>
+<br></li>
+</ul>
+<h2 id="waitpid">waitpid</h2>
+<p>pid_t waitpid(pid_t pid, int *wstatus, int options)</p>
+<ul>
+<li>特定の子プロセスの終了を待機する。<br>
+<br></li>
+</ul>
+<h2 id="wait3">wait3</h2>
+<p>wait3(int *status, int options, struct rusage *rusage)
+https://nxmnpg.lemoda.net/ja/2/wait3</p>
+<ul>
+<li>子プロセスの状態変更を待機する。<br>
+<br></li>
+</ul>
+<h2 id="wait4">wait4</h2>
+<p>wait4(pid_t wpid, int *status, int options, struct rusage *rusage)</p>
+<ul>
+<li>特定の子プロセスの状態変更を待機する。<br>
+<br></li>
+</ul>
+<h2 id="signal">signal</h2>
+<p>https://linuxjm.osdn.jp/html/LDP_man-pages/man7/signal.7.html<br>
+<br></p>
+<h2 id="sigaction">sigaction</h2>
+<ul>
+<li>割り込み処理<br>
+<br></li>
+</ul>
+<h2 id="sigemptyset">sigemptyset</h2>
+<ul>
+<li>シグナルセットを空にする。<br>
+<br></li>
+</ul>
+<h2 id="sigaddset">sigaddset</h2>
+<ul>
+<li>シグナルマスクにシグナルを追加する。</li>
+</ul>
+<h2 id="kill">kill</h2>
+<p>int kill(pid_t pid, int sig)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/kill.2.html<br>
+<br></p>
+<h2 id="exit">exit</h2>
+<p>void exit(int status)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/exit.3.html<br>
+<br></p>
+<h2 id="getcwd">getcwd</h2>
+<p>char *getcwd(char *buf, size_t size)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/getcwd.2.html</p>
+<ul>
+<li>カレントディレクトリを取得する。<br>
+<br></li>
+</ul>
+<h2 id="chdir">chdir</h2>
+<p>int chdir(const char *path)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/chdir.2.html</p>
+<ul>
+<li>カレントディレクトリを変更する。<br>
+<br></li>
+</ul>
+<h2 id="stat">stat</h2>
+<p>int stat(const char *pathname, struct stat *buf)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/stat.2.html</p>
+<ul>
+<li>ファイルの状態を取得する。<br>
+<br></li>
+</ul>
+<h2 id="lstat">lstat</h2>
+<p>int lstat(const char *pathname, struct stat *buf)</p>
+<ul>
+<li>ファイルの状態を取得する。<br>
+<br></li>
+</ul>
+<h2 id="fstat">fstat</h2>
+<p>int fstat(int fd, struct stat *buf);</p>
+<ul>
+<li>ファイルの状態を取得する（ファイルはfdで指定する）。<br>
+<br></li>
+</ul>
+<h2 id="unlink">unlink</h2>
+<ul>
+<li>ファイルシステム上の名前を削除する。<br>
+<br></li>
+</ul>
+<h2 id="execve">execve</h2>
+<p>int execve(const char *pathname, char *const argv[],char *const envp[])
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/execve.2.html<br>
+<br></p>
+<h2 id="dup">dup</h2>
+<p>int dup(int oldfd)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/dup.2.html,</p>
+<ul>
+<li>ファイルディスクリプターを複製する。</li>
+<li>forkと組み合わせてプロセス間通信に使う。<br>
+<br></li>
+</ul>
+<h2 id="dup2">dup2</h2>
+<p>int dup2(int oldfd, int newfd)</p>
+<ul>
+<li>ファイルディスクリプターを複製する。</li>
+<li>forkと組み合わせてプロセス間通信に使う。<br>
+<br></li>
+</ul>
+<h2 id="pipe">pipe</h2>
+<p>int pipe(int pipefd2)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/pipe.2.html</p>
+<ul>
+<li>パイプを作成する。<br>
+<br></li>
+</ul>
+<h2 id="opendir">opendir</h2>
+<p>DIR *opendir(const char *name)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/opendir.3.html</p>
+<ul>
+<li>ディレクトリをオープンする。<br>
+<br></li>
+</ul>
+<h2 id="readdir">readdir</h2>
+<p>struct dirent *readdir(DIR *dirp)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/readdir.3.html</p>
+<ul>
+<li>オープンしたディレクトリからファイル一覧を取得する。<br>
+<br></li>
+</ul>
+<h2 id="closedir">closedir</h2>
+<p>int closedir(DIR *dirp)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/closedir.3.html</p>
+<ul>
+<li>ディレクトリをクローズする。<br>
+<br></li>
+</ul>
+<h2 id="strerror">strerror</h2>
+<p>char *strerror(int errnum)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/strerror_r.3.html<br>
+<br></p>
+<h2 id="perror">perror</h2>
+<p>https://linuxjm.osdn.jp/html/LDP_man-pages/man3/errno.3.html</p>
+<ul>
+<li>errnoに対応するエラーメッセージを出力する。<br>
+<br></li>
+</ul>
+<h2 id="getenv">getenv</h2>
+<p>char *getenv(const char *name)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/getenv.3.html</p>
+<ul>
+<li>環境変数のvalueを取得する。<br>
+<br>
+<br></li>
+</ul>
+<h1 id="%E4%BB%A5%E4%B8%8B%E3%81%AF%E6%97%A7%E8%A6%81%E4%BB%B6%E3%81%AE%E5%90%8D%E6%AE%8B%E3%81%A7%E3%81%82%E3%82%8A%E5%9F%BA%E6%9C%AC%E7%9A%84%E3%81%AB%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%AA%E3%81%84">（以下は旧要件の名残であり、基本的に使用しない）</h1>
+<h2 id="isatty">isatty</h2>
+<p>int isatty(int fd)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/isatty.3.html</p>
+<ul>
+<li>ファイルディスクリプターが端末を参照しているか判定する。<br>
+<br></li>
+</ul>
+<h2 id="ttyname">ttyname</h2>
+<p>char *ttyname(int fd)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/ttyname.3.html</p>
+<ul>
+<li>ファイルディスクリプターが参照している端末のパスを取得する。<br>
+<br></li>
+</ul>
+<h2 id="ttyslot">ttyslot</h2>
+<p>int ttyslot(void)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/ttyslot.3.html</p>
+<ul>
+<li>カレントユーザーの端末のスロットをファイルから探す<br>
+<br></li>
+</ul>
+<h2 id="ioctl">ioctl</h2>
+<p>int ioctl(int fd, unsigned long request, ...)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man2/ioctl.2.html</p>
+<ul>
+<li>スペシャルファイルを構成するデバイスのパラメーターを 操作する<br>
+<br></li>
+</ul>
+<h2 id="tcsetattr">tcsetattr</h2>
+<p>int tcsetattr(int fd, int optional_actions, const struct termios *termios_p)
+https://linuxjm.osdn.jp/html/LDP_man-pages/man3/termios.3.html</p>
+<ul>
+<li>端末の属性を設定する。<br>
+<br></li>
+</ul>
+<h2 id="tcgetattr">tcgetattr</h2>
+<p>int tcgetattr(int fd, struct termios *termios_p)</p>
+<ul>
+<li>端末の属性を取得する。<br>
+<br></li>
+</ul>
+<h2 id="tgetent">tgetent</h2>
+<p>int tgetent(char *bp, const char *name)
+https://nxmnpg.lemoda.net/ja/3/tgetent</p>
+<ul>
+<li>端末名の入力をbpに書き出す。<br>
+<br></li>
+</ul>
+<h2 id="tgetflag">tgetflag</h2>
+<p>int tgetflag(const char *id)</p>
+<ul>
+<li>指定した機能が端末に存在するかを判定する。<br>
+<br></li>
+</ul>
+<h2 id="tgetnum">tgetnum</h2>
+<p>int tgetnum(const char *id)</p>
+<ul>
+<li>指定した機能idが与えられていないか判定する。<br>
+<br></li>
+</ul>
+<h2 id="tgetstr">tgetstr</h2>
+<p>char *tgetstr(const char *id, char **area)<br>
+<br></p>
+<h2 id="tgoto">tgoto</h2>
+<p>char *tgoto(const char *cm, int destcol, int destline)<br>
+<br></p>
+<h2 id="tputs">tputs</h2>
+<p>int tputs(const char *cp, int affcnt, int (*outc)(int))</p>
 
-read
-ssize_t read(int fd, void *buf, size_t count)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/read.2.html
-
-close
-int close(int fd)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/close.2.html
-
-fork
-pid_t fork(void)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/fork.2.html
-
-子プロセスを作成する
-wait
-pid_t wait(int *wstatus)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/wait.2.html
-
-子プロセスの終了を待機する。
-waitpid
-pid_t waitpid(pid_t pid, int *wstatus, int options)
-
-特定の子プロセスの終了を待機する。
-wait3
-wait3(int *status, int options, struct rusage *rusage)
-https://nxmnpg.lemoda.net/ja/2/wait3
-
-子プロセスの状態変更を待機する。
-wait4
-wait4(pid_t wpid, int *status, int options, struct rusage *rusage)
-
-特定の子プロセスの状態変更を待機する。
-signal
-https://linuxjm.osdn.jp/html/LDP_man-pages/man7/signal.7.html
-
-sigaction
-割り込み処理
-sigemptyset
-シグナルセットを空にする。
-sigaddset
-シグナルマスクにシグナルを追加する。
-kill
-int kill(pid_t pid, int sig)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/kill.2.html
-
-exit
-void exit(int status)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/exit.3.html
-
-getcwd
-char *getcwd(char *buf, size_t size)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/getcwd.2.html
-
-カレントディレクトリを取得する。
-chdir
-int chdir(const char *path)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/chdir.2.html
-
-カレントディレクトリを変更する。
-stat
-int stat(const char *pathname, struct stat *buf)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/stat.2.html
-
-ファイルの状態を取得する。
-lstat
-int lstat(const char *pathname, struct stat *buf)
-
-ファイルの状態を取得する。
-fstat
-int fstat(int fd, struct stat *buf);
-
-ファイルの状態を取得する（ファイルはfdで指定する）。
-unlink
-ファイルシステム上の名前を削除する。
-execve
-int execve(const char *pathname, char *const argv[],char *const envp[])
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/execve.2.html
-
-dup
-int dup(int oldfd)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/dup.2.html,
-
-ファイルディスクリプターを複製する。
-forkと組み合わせてプロセス間通信に使う。
-dup2
-int dup2(int oldfd, int newfd)
-
-ファイルディスクリプターを複製する。
-forkと組み合わせてプロセス間通信に使う。
-pipe
-int pipe(int pipefd2)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/pipe.2.html
-
-パイプを作成する。
-opendir
-DIR *opendir(const char *name)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/opendir.3.html
-
-ディレクトリをオープンする。
-readdir
-struct dirent *readdir(DIR *dirp)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/readdir.3.html
-
-オープンしたディレクトリからファイル一覧を取得する。
-closedir
-int closedir(DIR *dirp)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/closedir.3.html
-
-ディレクトリをクローズする。
-strerror
-char *strerror(int errnum)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/strerror_r.3.html
-
-perror
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/errno.3.html
-
-errnoに対応するエラーメッセージを出力する。
-getenv
-char *getenv(const char *name)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/getenv.3.html
-
-環境変数のvalueを取得する。
-（以下は旧要件の名残であり、基本的に使用しない）
-isatty
-int isatty(int fd)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/isatty.3.html
-
-ファイルディスクリプターが端末を参照しているか判定する。
-ttyname
-char *ttyname(int fd)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/ttyname.3.html
-
-ファイルディスクリプターが参照している端末のパスを取得する。
-ttyslot
-int ttyslot(void)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/ttyslot.3.html
-
-カレントユーザーの端末のスロットをファイルから探す
-ioctl
-int ioctl(int fd, unsigned long request, ...)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man2/ioctl.2.html
-
-スペシャルファイルを構成するデバイスのパラメーターを 操作する
-tcsetattr
-int tcsetattr(int fd, int optional_actions, const struct termios *termios_p)
-https://linuxjm.osdn.jp/html/LDP_man-pages/man3/termios.3.html
-
-端末の属性を設定する。
-tcgetattr
-int tcgetattr(int fd, struct termios *termios_p)
-
-端末の属性を取得する。
-tgetent
-int tgetent(char *bp, const char *name)
-https://nxmnpg.lemoda.net/ja/3/tgetent
-
-端末名の入力をbpに書き出す。
-tgetflag
-int tgetflag(const char *id)
-
-指定した機能が端末に存在するかを判定する。
-tgetnum
-int tgetnum(const char *id)
-
-指定した機能idが与えられていないか判定する。
-tgetstr
-char *tgetstr(const char *id, char **area)
-
-tgoto
-char *tgoto(const char *cm, int destcol, int destline)
-
-tputs
-int tputs(const char *cp, int affcnt, int (*outc)(int))
-
+</body>
+</html>

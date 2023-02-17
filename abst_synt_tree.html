@@ -1,95 +1,435 @@
-抽象構文木（AST': Abstract Syntax Tree）
-grammar rule
-2.10.2 Shell Grammar Rules
-[Command Name]
+<!DOCTYPE html>
+<html>
+<head>
+<title>abst_synt_tree.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 
-When the TOKEN is exactly a reserved word, the token identifier for that reserved word shall result. Otherwise, the token WORD shall be returned. Also, if the parser is in any state where only a reserved word could be the next correct token, proceed as above.
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%E6%8A%BD%E8%B1%A1%E6%A7%8B%E6%96%87%E6%9C%A8ast-abstract-syntax-tree">抽象構文木（AST': Abstract Syntax Tree）</h1>
+<hr>
+<h1 id="grammar-rule">grammar rule</h1>
+<p>2.10.2 Shell Grammar Rules
+[Command Name]</p>
+<p>When the TOKEN is exactly a reserved word, the token identifier for that reserved word shall result. Otherwise, the token WORD shall be returned. Also, if the parser is in any state where only a reserved word could be the next correct token, proceed as above.
 Note:
 Because at this point characters are retained in the token, quoted strings cannot be recognized as reserved words. This rule also implies that reserved words are not recognized except in certain positions in the input, such as after a or ; the grammar presumes that if the reserved word is intended, it is properly delimited by the user, and does not attempt to reflect that requirement directly. Also note that line joining is done before tokenization, as described in Escape Character (Backslash), so escaped characters are already removed at this point.
-Rule 1 is not directly referenced in the grammar, but is referred to by other rules, or applies globally.
+Rule 1 is not directly referenced in the grammar, but is referred to by other rules, or applies globally.</p>
+<p>[Redirection to or from filename]</p>
+<p>The expansions specified in Redirection shall occur. As specified there, exactly one field can result (or the result is unspecified), and there are additional requirements on pathname expansion.</p>
+<p>[Redirection from here-document]</p>
+<p>Quote removal shall be applied to the word to determine the delimiter that is used to find the end of the here-document that begins after the next .</p>
+<p>[Case statement termination]</p>
+<p>When the TOKEN is exactly the reserved word esac, the token identifier for esac shall result. Otherwise, the token WORD shall be returned.</p>
+<p>[ NAME in for]</p>
+<p>When the TOKEN meets the requirements for a name (see XBD Name ), the token identifier NAME shall result. Otherwise, the token WORD shall be returned.</p>
+<p>[Third word of for and case]</p>
+<p>[ case only]</p>
+<p>When the TOKEN is exactly the reserved word in, the token identifier for in shall result. Otherwise, the token WORD shall be returned.</p>
+<p>[ for only]</p>
+<p>When the TOKEN is exactly the reserved word in or do, the token identifier for in or do shall result, respectively. Otherwise, the token WORD shall be returned.</p>
+<p>(For a. and b.: As indicated in the grammar, a linebreak precedes the tokens in and do. If characters are present at the indicated location, it is the token after them that is treated in this fashion.)</p>
+<p>[Assignment preceding command name]</p>
+<p>[When the first word]</p>
+<p>If the TOKEN does not contain the character '=', rule 1 is applied. Otherwise, 7b shall be applied.</p>
+<p>[Not the first word]</p>
+<p>If the TOKEN contains an unquoted (as determined while applying rule 4 from Token Recognition) character that is not part of an embedded parameter expansion, command substitution, or arithmetic expansion construct (as determined while applying rule 5 from Token Recognition):</p>
+<p>If the TOKEN begins with '=', then rule 1 shall be applied.</p>
+<p>If all the characters in the TOKEN preceding the first such form a valid name (see XBD Name), the token ASSIGNMENT_WORD shall be returned.</p>
+<p>Otherwise, it is unspecified whether rule 1 is applied or ASSIGNMENT_WORD is returned.</p>
+<p>Otherwise, rule 1 shall be applied.</p>
+<p>Assignment to the name within a returned ASSIGNMENT_WORD token shall occur as specified in Simple Commands.</p>
+<p>[ NAME in function]</p>
+<p>When the TOKEN is exactly a reserved word, the token identifier for that reserved word shall result. Otherwise, when the TOKEN meets the requirements for a name, the token identifier NAME shall result. Otherwise, rule 7 applies.</p>
+<p>[Body of function]</p>
+<p>Word expansion and assignment shall never occur, even when required by the rules above, when this rule is being parsed. Each TOKEN that might either be expanded or have assignment applied to it shall instead be returned as a single WORD consisting only of characters that are exactly the token described in Token Recognition.</p>
+<br>
+<h2 id="%E3%83%90%E3%83%83%E3%82%AB%E3%82%B9%E3%83%BB%E3%83%8A%E3%82%A6%E3%82%A2%E8%A8%98%E6%B3%95%E3%81%AB%E3%82%88%E3%82%8B%E3%82%A2%E3%83%A1%E3%83%AA%E3%82%AB%E3%81%AE%E4%BD%8F%E6%89%80%E8%A1%A8%E8%A8%98">バッカス・ナウア記法によるアメリカの住所表記</h2>
+<pre class="hljs"><code><div>&lt;住所&gt; ::= &lt;名前&gt; &lt;住所&gt; &lt;郵便番号&gt;
 
-[Redirection to or from filename]
-
-The expansions specified in Redirection shall occur. As specified there, exactly one field can result (or the result is unspecified), and there are additional requirements on pathname expansion.
-
-[Redirection from here-document]
-
-Quote removal shall be applied to the word to determine the delimiter that is used to find the end of the here-document that begins after the next .
-
-[Case statement termination]
-
-When the TOKEN is exactly the reserved word esac, the token identifier for esac shall result. Otherwise, the token WORD shall be returned.
-
-[ NAME in for]
-
-When the TOKEN meets the requirements for a name (see XBD Name ), the token identifier NAME shall result. Otherwise, the token WORD shall be returned.
-
-[Third word of for and case]
-
-[ case only]
-
-When the TOKEN is exactly the reserved word in, the token identifier for in shall result. Otherwise, the token WORD shall be returned.
-
-[ for only]
-
-When the TOKEN is exactly the reserved word in or do, the token identifier for in or do shall result, respectively. Otherwise, the token WORD shall be returned.
-
-(For a. and b.: As indicated in the grammar, a linebreak precedes the tokens in and do. If characters are present at the indicated location, it is the token after them that is treated in this fashion.)
-
-[Assignment preceding command name]
-
-[When the first word]
-
-If the TOKEN does not contain the character '=', rule 1 is applied. Otherwise, 7b shall be applied.
-
-[Not the first word]
-
-If the TOKEN contains an unquoted (as determined while applying rule 4 from Token Recognition) character that is not part of an embedded parameter expansion, command substitution, or arithmetic expansion construct (as determined while applying rule 5 from Token Recognition):
-
-If the TOKEN begins with '=', then rule 1 shall be applied.
-
-If all the characters in the TOKEN preceding the first such form a valid name (see XBD Name), the token ASSIGNMENT_WORD shall be returned.
-
-Otherwise, it is unspecified whether rule 1 is applied or ASSIGNMENT_WORD is returned.
-
-Otherwise, rule 1 shall be applied.
-
-Assignment to the name within a returned ASSIGNMENT_WORD token shall occur as specified in Simple Commands.
-
-[ NAME in function]
-
-When the TOKEN is exactly a reserved word, the token identifier for that reserved word shall result. Otherwise, when the TOKEN meets the requirements for a name, the token identifier NAME shall result. Otherwise, rule 7 applies.
-
-[Body of function]
-
-Word expansion and assignment shall never occur, even when required by the rules above, when this rule is being parsed. Each TOKEN that might either be expanded or have assignment applied to it shall instead be returned as a single WORD consisting only of characters that are exactly the token described in Token Recognition.
-
-バッカス・ナウア記法によるアメリカの住所表記
-<住所> ::= <名前> <住所> <郵便番号>
-
-<名前> ::= <個人名> <姓> <敬称> <EOL> 
-              | <個人名> <名前> <EOL>
+&lt;名前&gt; ::= &lt;個人名&gt; &lt;姓&gt; &lt;敬称&gt; &lt;EOL&gt; 
+      | &lt;個人名&gt; &lt;名前&gt; &lt;EOL&gt;
  
-<個人名> ::= <名> | <頭文字> "." 
+&lt;個人名&gt; ::= &lt;名&gt; | &lt;頭文字&gt; &quot;.&quot; 
 
-<住所> ::= <部屋番号> <番号> <丁目> <EOL>
+&lt;住所&gt; ::= &lt;部屋番号&gt; &lt;番号&gt; &lt;丁目&gt; &lt;EOL&gt;
 
- <郵便番号> ::= <町名> "," <州名> <郵便コード> <EOL>
-バッカス・ナウア記法によるshellコマンドの表記（課題の範囲のみ）
-command_line ::=
-      "\n"
-    | sequencial_commands delimiter "\n"
-    | sequencial_commands "\n"
+ &lt;郵便番号&gt; ::= &lt;町名&gt; &quot;,&quot; &lt;州名&gt; &lt;郵便コード&gt; &lt;EOL&gt;
+</div></code></pre>
+<h2 id="%E3%83%90%E3%83%83%E3%82%AB%E3%82%B9%E3%83%BB%E3%83%8A%E3%82%A6%E3%82%A2%E8%A8%98%E6%B3%95%E3%81%AB%E3%82%88%E3%82%8Bshell%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%AE%E8%A1%A8%E8%A8%98%E8%AA%B2%E9%A1%8C%E3%81%AE%E7%AF%84%E5%9B%B2%E3%81%AE%E3%81%BF">バッカス・ナウア記法によるshellコマンドの表記（課題の範囲のみ）</h2>
+<pre class="hljs"><code><div>command_line ::=
+      &quot;\n&quot;
+    | sequencial_commands delimiter &quot;\n&quot;
+    | sequencial_commands &quot;\n&quot;
 
 delimiter ::=
-      ";"
+      &quot;;&quot;
 
 sequencial_commands ::=
       piped_commands delimiter sequencial_commands
     | piped_commands
 
 piped_commands ::=
-      command "|" piped_commands
+      command &quot;|&quot; piped_commands
     | command
 
 command ::=
@@ -102,20 +442,22 @@ arguments ::=
     | string arguments
 
 string ::=
-      expandable <no_space> string
+      expandable &lt;no_space&gt; string
     | expandable
-    | not_expandable <no_space> string
+    | not_expandable &lt;no_space&gt; string
     | not_expandable
-    | expandable_quoted <no_space> string
+    | expandable_quoted &lt;no_space&gt; string
     | expandable_quoted
 
 redirection ::=
-      "<" string
-    | ">" string
-    | ">>" string
-    | "<<" string
-【参考】バッカス・ナウア記法によるshellコマンドの表記（すべて）
-/* -------------------------------------------------------
+      &quot;&lt;&quot; string
+    | &quot;&gt;&quot; string
+    | &quot;&gt;&gt;&quot; string
+    | &quot;&lt;&lt;&quot; string
+</div></code></pre>
+<br>
+<h2 id="%E5%8F%82%E8%80%83%E3%83%90%E3%83%83%E3%82%AB%E3%82%B9%E3%83%BB%E3%83%8A%E3%82%A6%E3%82%A2%E8%A8%98%E6%B3%95%E3%81%AB%E3%82%88%E3%82%8Bshell%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%AE%E8%A1%A8%E8%A8%98%E3%81%99%E3%81%B9%E3%81%A6">【参考】バッカス・ナウア記法によるshellコマンドの表記（すべて）</h2>
+<pre class="hljs"><code><div>/* -------------------------------------------------------
    The Grammar
    ------------------------------------------------------- */
 %start program
@@ -248,9 +590,9 @@ io_redirect      :           io_file
                  |           io_here
                  | IO_NUMBER io_here
                  ;
-io_file          : '<'       filename
+io_file          : '&lt;'       filename
                  | LESSAND   filename
-                 | '>'       filename
+                 | '&gt;'       filename
                  | GREATAND  filename
                  | DGREAT    filename
                  | LESSGREAT filename
@@ -269,7 +611,7 @@ newline_list     :              NEWLINE
 linebreak        : newline_list
                  | /* empty */
                  ;
-separator_op     : '&'
+separator_op     : '&amp;'
                  | ';'
                  ;
 separator        : separator_op linebreak
@@ -278,3 +620,7 @@ separator        : separator_op linebreak
 sequential_sep   : ';' linebreak
                  | newline_list
                  ;
+</div></code></pre>
+
+</body>
+</html>

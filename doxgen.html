@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>apue.md</title>
+<title>doxgen.md</title>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 
 <style>
@@ -365,81 +365,61 @@ code {
           : 'default'
     });
   </script>
-<h1 id="%E6%9B%B8%E7%B1%8D-%E4%BE%8B%E8%A7%A3unix%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E6%95%99%E5%AE%A4">書籍: 例解UNIXプログラミング教室</h1>
+<h1 id="doxygen%E3%81%AB%E3%82%88%E3%82%8B%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88%E5%8C%96">Doxygenによるドキュメント化</h1>
 <hr>
-<p>Cの復習:<br>
-低水準入出力:<br>
-標準入出力ライブラリ:<br>
-プロセス:</p>
-<p>いくつもの同時に動いているプログラムのことを、プロセスという。
-種類は、shell process, window display process, daemon等あり。<br>
-プロセスという概念を使うと、楽にプログラムが書ける。
-独自のメモリ空間内なら、プロセッサの割り当てと解放を気にせずとも良い。<br>
-プロセスは普通1つとして動作するが、処理が複雑な際は、複数プロセスが良い場合もある。</p>
-<p>% echo $$<br>
-% ps -l -p プロセスID<br>
-例としては、プログラムは、mainから始まって、exitで終わる、などがある。<br>
-環境変数とはプロセスに付随するデータで、プロセスは環境変数の値を読んだり、環境変数に値を設定したりできる。<br>
-環境変数の値は文字列である。<br>
-プロセスは、環境変数をいくつも持てる。<br>
-環境変数とその値を表示させるには、</p>
-<ul>
-<li>コマンドenvを無引数で実行する。</li>
-<li>getenv(&quot;文字列&quot;)</li>
-<li>int main(int argc, char *argv[], char *envp[])</li>
-</ul>
-<pre class="hljs"><code><div>#include &lt;stdio.h&gt;
-extern char **environ;
-
-int main(void)
-{
-	char **p = environ;
-	while (*p != NULL)
-	{
-		printf(&quot;%s\n&quot;, *p);
-		p++;
-	}
-	return (0);
-}
+<h1 id="doxygen%E3%81%A8%E3%81%AF">Doxygenとは</h1>
+<p>C言語に対応したドキュメント生成ツール。
+ソースコードの構造やUML図がHTML形式で出力できます。<br>
+<br></p>
+<h1 id="%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E6%96%B9%E6%B3%95mac">インストール方法（mac）</h1>
+<ol>
+<li>Homebrewで簡単<br>
+<code>brew install doxygen</code><br>
+<code>brew install graphviz</code><br>
+→ graphvizは任意だが、インストールするとUML図が出力できる。<br>
+<br></li>
+<li>プロジェクト直下で以下のコマンドを入力。<br>
+<code>doxygen -g</code><br>
+→Doxfileが作成される。<br>
+<br></li>
+<li>以下コマンドを入力<br>
+<code>doxygen</code><br>
+Doxyfileをもとにドキュメントが生成される。<br>
+<br></li>
+<li>VSCodeの拡張機能<br>
+Doxygen Documentation Generatorをインストールしておくと便利<br>
+https://marketplace.visualstudio.com/items?itemName=cschlosser.doxdocgen<br>
+<br></li>
+</ol>
+<h1 id="%E8%A8%98%E8%BF%B0%E6%96%B9%E6%B3%95">記述方法</h1>
+<h2 id="%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%83%E3%83%88%E4%BE%8B">フォーマット例</h2>
+<pre class="hljs"><code><div>/** こんな感じのコメントが認識される */  
 </div></code></pre>
-<pre class="hljs"><code><div>#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-int main(void)
-{
-	char *pathstr;
-	//if ((pathstr = getenv(&quot;PATH&quot;)) != NULL)
-	if ((pathstr = getenv(&quot;HOME&quot;)) != NULL)
-	{
-		//printf(&quot;PATH = %s\n&quot;, pathstr);
-		printf(&quot;HOME = %s\n&quot;, pathstr);
-	}
-	else
-	{
-		//printf(&quot;PATH not set\n&quot;);
-		printf(&quot;HOME not set\n&quot;);
-	}
-	return (0);
-}
+<pre class="hljs"><code><div>/*  
+** こんな風に  
+** 複数行でも  
+** 認識される  
+*/
 </div></code></pre>
-<pre class="hljs"><code><div>#include &lt;stdio.h&gt;
-int main(int argc, char *argv[], char *envp[])
-{
-	int i;
-
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		printf(&quot;%d: [%s]\n&quot;, i, envp[i]);
-		i++;
-	}
-	return (0);
-}
-ファイルシステム:
-ファイル記述子のコピーとパイプ:
-ソケット通信入門:
-シグナルと競合状態:
-端末:
+<h2 id="%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E8%A8%98%E8%BF%B0%E4%BE%8B">ファイルの記述例</h2>
+<pre class="hljs"><code><div>/**  
+* @file ファイル名.h  
+* @brief 簡単な説明  
+* @author 作成者  
+* @date 作成日  
+* @details 詳細な説明  
+*/  
 </div></code></pre>
+<h2 id="%E9%96%A2%E6%95%B0%E3%81%AE%E8%A8%98%E8%BF%B0%E4%BE%8B">関数の記述例</h2>
+<pre class="hljs"><code><div>/**  
+* @brief 簡単な説明（～する関数）  
+* @param[in] a(引数名) 引数の説明  
+* @param[out] b(引数名) 引数の説明  
+* @return bool 戻り値の説明  
+* @details 詳細な説明  
+*/  
+</div></code></pre>
+<h1 id="doxyfile%E3%81%AE%E6%8E%A8%E5%A5%A8%E8%A8%AD%E5%AE%9A">Doxyfileの推奨設定</h1>
 
 </body>
 </html>

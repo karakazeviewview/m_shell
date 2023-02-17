@@ -1,95 +1,463 @@
-bin/ls OK
-空でls OK
-ls+タブのみ ng(挙動が違う。課題に追加済み) NG
+<!DOCTYPE html>
+<html>
+<head>
+<title>review.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 
-bin/ls ""や''でくくる、またはくくらない OK
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
-echo
-echo 引数有り、または引数なし OK
-echo -n 引数 OK
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
 
-exit
-exit 引数有り、または引数なし OK
-minishellの再立ち上げ OK
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
 
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<p>bin/ls OK<br>
+空でls OK<br>
+ls+タブのみ ng(挙動が違う。課題に追加済み) NG</p>
+<p>bin/ls &quot;&quot;や''でくくる、またはくくらない OK</p>
+<p>echo<br>
+echo 引数有り、または引数なし OK<br>
+echo -n 引数 OK</p>
+<br>
+exit  
+<p>exit 引数有り、または引数なし OK<br>
+minishellの再立ち上げ OK</p>
+<br>
 /bin/ls など実行し、""や''なしで echo $ナントカ がbashと同じか? OK
-
+<br>
 '/bin/ls filethatdosenotexist'のような失敗するはずのコマンドの動きは? ng(エラーメッセージが出ない) NG
+<br>
 expr $?+$? ng(クラッシュする) NG
-
+<br>
 signal
-空のプロンプトでctrl-Cを実行すると、新プロンプトが表示され改行されるか? ng(^Cと表示。改行されない) NG
-空のプロンプトでctrl-\を押すとbashと同じく無反応か? ng(^\と出てしまう) NG
-空のプロンプトでctrl-Dを押すと終了するか? OK
-プロンプトでctrl-Cを押すと改行されて新プロンプトが表示されるか? ng(^Cと出てしまう) NG
-プロンプトでctrl-Dを押すと、なにも起こらないか? OK
-プロンプトでctrl-\を押すとbashと同じく無反応か? ng(^\と出てしまう) NG
-
-引数なしでcatやgrepなどのブロッキングコマンドを実行し、ctrl-Cでの挙動は? ng(終了しない) NG
+<p>空のプロンプトでctrl-Cを実行すると、新プロンプトが表示され改行されるか? ng(^Cと表示。改行されない) NG</p>
+<p>空のプロンプトでctrl-\を押すとbashと同じく無反応か? ng(^\と出てしまう) NG</p>
+<p>空のプロンプトでctrl-Dを押すと終了するか? OK</p>
+<p>プロンプトでctrl-Cを押すと改行されて新プロンプトが表示されるか? ng(^Cと出てしまう) NG</p>
+<p>プロンプトでctrl-Dを押すと、なにも起こらないか? OK</p>
+<p>プロンプトでctrl-\を押すとbashと同じく無反応か? ng(^\と出てしまう) NG</p>
+<p>引数なしでcatやgrepなどのブロッキングコマンドを実行し、ctrl-Cでの挙動は? ng(終了しない) NG</p>
+<br>
 引数なしでcatやgrepなどのブロッキングコマンドを実行し、ctrl-\での挙動は? ng(^\が出て終了しない) NG
-引数なしでcatやgrepなどのブロッキングコマンドを実行し、ctrl-Dでの挙動は? OK
-
+<p>引数なしでcatやgrepなどのブロッキングコマンドを実行し、ctrl-Dでの挙動は? OK</p>
+<br>
 double quote
-引数をダブルクウォートと空白" "で、$を使わず以下の様に何らかのコマンドを実行。挙動は? OK
-echo "cat lol.c | cat > lol.c" OK
-
+<p>引数をダブルクウォートと空白&quot; &quot;で、$を使わず以下の様に何らかのコマンドを実行。挙動は? OK</p>
+<p>echo &quot;cat lol.c | cat &gt; lol.c&quot; OK</p>
+<br>
 single quote
-引数をシングルクウォートで囲んだコマンドの実行。挙動は? OK
-空の引数を渡した時の挙動は? OK
-環境変数、空白文字、パイプ、をシングルクウォートで試す。挙動は? OK
-echo '$USER'は$USERを表示するか? OK
-シングルクォート''で囲むと本来解釈できないものは、挙動がbashと一致するか? ng('cat noexist'でエラーが出ない) NG
-
+<p>引数をシングルクウォートで囲んだコマンドの実行。挙動は? OK</p>
+<p>空の引数を渡した時の挙動は? OK</p>
+<p>環境変数、空白文字、パイプ、をシングルクウォートで試す。挙動は? OK</p>
+<p>echo '$USER'は$USERを表示するか? OK</p>
+<p>シングルクォート''で囲むと本来解釈できないものは、挙動がbashと一致するか? ng('cat noexist'でエラーが出ない) NG</p>
+<br>
 env
-envで現在の環境変数が表示されているか? OK
-
+<p>envで現在の環境変数が表示されているか? OK</p>
+<br>
 export
-環境変数をexportし、新しい変数を作成。古い変数は置き換えて、envで確認する。 ng(MM="mmatsuo"と打つと、MM=""とmmatsuo=""との2個に分かれてしまう)
-
+<p>環境変数をexportし、新しい変数を作成。古い変数は置き換えて、envで確認する。 ng(MM=&quot;mmatsuo&quot;と打つと、MM=&quot;&quot;とmmatsuo=&quot;&quot;との2個に分かれてしまう)</p>
+<br>
 unset
-一部の環境変数を削除するにはunsetを使い、envで結果を確認する。OK
-
+<p>一部の環境変数を削除するにはunsetを使い、envで結果を確認する。OK</p>
+<br>
 cd
-作業ディレクトリを移動し、/bin/lsで正しいディレクトリにいるかを確認する。 NG
-動作するはずのcdと動作しないはずのcdを複数回ためす。
-引数として、'.', '...'も試す。
-
+<p>作業ディレクトリを移動し、/bin/lsで正しいディレクトリにいるかを確認する。 NG</p>
+<p>動作するはずのcdと動作しないはずのcdを複数回ためす。</p>
+<p>引数として、'.', '...'も試す。</p>
+<br>
 pwd
-複数のディレクトリで、pwdを複数回試す。 ng(cd完成後に要挙動再チェック!!) NG
-
+<p>複数のディレクトリで、pwdを複数回試す。 ng(cd完成後に要挙動再チェック!!) NG</p>
+<br>
 Relation Path
-相対パスを使用してコマンドを実行する。
-たくさんの'..'を使用した複雑な相対パスで、複数のディレクトリで複数回コマンド実行する。 OK
-
+<p>相対パスを使用してコマンドを実行する。</p>
+<p>たくさんの'..'を使用した複雑な相対パスで、複数のディレクトリで複数回コマンド実行する。 OK</p>
+<br>
 Environment Path
-コマンドを実行するが、今回はパスを指定しない。
-PATHの設定を解除し、動作しなくなったかどうかを確認する。 OK
-PATHに複数ディレクトリの値(directory1: directory2)を設定し、左から順番にディレクトリがチェックされることを確認する。
-
+<p>コマンドを実行するが、今回はパスを指定しない。</p>
+<p>PATHの設定を解除し、動作しなくなったかどうかを確認する。 OK</p>
+<p>PATHに複数ディレクトリの値(directory1: directory2)を設定し、左から順番にディレクトリがチェックされることを確認する。</p>
+<br>
 redirection
-<, > を使って、コマンドを実行する。 OK
-コマンドや引数を変えて複数回繰り返し、> を >> にも変更してみる。
-同じリダイレクトが複数回失敗するかどうかをチェックする。
-<< のリダイレクトをテストする(履歴更新の必要はない) OK
-
+<p>&lt;, &gt; を使って、コマンドを実行する。 OK</p>
+<p>コマンドや引数を変えて複数回繰り返し、&gt; を &gt;&gt; にも変更してみる。</p>
+<p>同じリダイレクトが複数回失敗するかどうかをチェックする。</p>
+<p>&lt;&lt; のリダイレクトをテストする(履歴更新の必要はない) OK</p>
+<br>
 pipe
-'cat file | grep bla | more' のようにパイプでコマンド実行する。
-コマンドと引数を変えて複数回繰り返す。
-'ls filethatdoesntexist | grep bla | more' のような失敗するはずのコマンドを試す。 OK
-パイプとリダイレクトを混ぜてコマンド実行する。 ng(echo 'a' > out | echo 'b' >> out | echo 'c' >> out | echo 'd' >> out | cat 'out' の挙動が違う)
-
+<p>'cat file | grep bla | more' のようにパイプでコマンド実行する。</p>
+<p>コマンドと引数を変えて複数回繰り返す。</p>
+<p>'ls filethatdoesntexist | grep bla | more' のような失敗するはずのコマンドを試す。 OK</p>
+<p>パイプとリダイレクトを混ぜてコマンド実行する。 ng(echo 'a' &gt; out | echo 'b' &gt;&gt; out | echo 'c' &gt;&gt; out | echo 'd' &gt;&gt; out | cat 'out' の挙動が違う)</p>
+<br>
 Go Crazy and history
-コマンドラインを入力し、Ctrl-Cを押し、Enterを押すと、バッファは綺麗になり、なにも実行されないか確認する。 ng(空行が入ってしまう) NG
-履歴を上下に移動して、過去実行したコマンドを再試行できるか確認する。 OK
-'dsbksdgbksdghsd'のような動作しないはずのコマンドを実行し、クラッシュしないかを確認する。 ng(command not foundのエラーメッセが出ない) NG
-大量の引数を持つ長いコマンドを実行してみる。
-
+<p>コマンドラインを入力し、Ctrl-Cを押し、Enterを押すと、バッファは綺麗になり、なにも実行されないか確認する。 ng(空行が入ってしまう) NG</p>
+<p>履歴を上下に移動して、過去実行したコマンドを再試行できるか確認する。 OK</p>
+<p>'dsbksdgbksdghsd'のような動作しないはずのコマンドを実行し、クラッシュしないかを確認する。 ng(command not foundのエラーメッセが出ない) NG</p>
+<p>大量の引数を持つ長いコマンドを実行してみる。</p>
+<br>
 Environment Valiables
-いくつかの$変数を引数としてechoを実行する。 ng(echo $$USERでクラッシュする。echo $USER $TERMはOK) NG
-環境変数として$が解釈されることを確認する。 OK
-ダブルクォートが$を補完していることを確認する。 OK
-USERが存在するか、設定されているかを確認する。 OK
-echo "USER" は、bashと同じ値を表示するか確認する。 OK
-
+<p>いくつかの$変数を引数としてechoを実行する。 ng(echo $$USERでクラッシュする。echo $USER $TERMはOK) NG</p>
+<p>環境変数として$が解釈されることを確認する。 OK</p>
+<p>ダブルクォートが$を補完していることを確認する。 OK</p>
+<p>USERが存在するか、設定されているかを確認する。 OK</p>
+<p>echo &quot;USER&quot; は、bashと同じ値を表示するか確認する。 OK</p>
+<br>
 Mandatoryは以上。
 
+</body>
+</html>
